@@ -1,0 +1,21 @@
+﻿@page
+@model ResumeMatcher.Pages.UploadCVModel
+@{
+    ViewData["Title"] = "Upload CV";
+}
+
+<h2>Upload Candidate CV</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="cvFile">Select CV (PDF or DOCX)</label>
+        <input type="file" class="form-control" id="cvFile" name="CVFile" required />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+
+@if (Model.UploadMessage != null)
+{
+    <div class="alert alert-info mt-3">@Model.UploadMessage</div>
+}
