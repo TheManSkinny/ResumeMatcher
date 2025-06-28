@@ -1,10 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace ResumeMatcher.Models
 {
     public class JobPost
     {
         public int Id { get; set; }
-        public string JobTitle { get; set; }
-        public string Description { get; set; }
-        public DateTime PostedDate { get; set; }
+
+        [Required]
+        public string? JobTitle { get; set; }
+
+        [Required]
+        public string? Description { get; set; }
+
+        public DateTime PostedAt { get; set; } = DateTime.Now;
     }
 }

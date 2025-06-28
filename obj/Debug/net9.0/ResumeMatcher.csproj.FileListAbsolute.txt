@@ -226,3 +226,9 @@ C:\Users\Michael\Documents\C# Project\ResumeMatcher\bin\Debug\net9.0\runtimes\wi
 C:\Users\Michael\Documents\C# Project\ResumeMatcher\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Michael\Documents\C# Project\ResumeMatcher\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\Michael\Documents\C# Project\ResumeMatcher\obj\Debug\net9.0\ResumeMa.29B1F22E.Up2Date
+C:\Users\Michael\Documents\C# Project\ResumeMatcher\obj\Debug\net9.0\ResumeMatcher.sourcelink.json
+C:\Users\Michael\Documents\C# Project\ResumeMatcher\bin\Debug\net9.0\UglyToad.PdfPig.dll
+C:\Users\Michael\Documents\C# Project\ResumeMatcher\bin\Debug\net9.0\UglyToad.PdfPig.Core.dll
+C:\Users\Michael\Documents\C# Project\ResumeMatcher\bin\Debug\net9.0\UglyToad.PdfPig.Fonts.dll
+C:\Users\Michael\Documents\C# Project\ResumeMatcher\bin\Debug\net9.0\UglyToad.PdfPig.Tokenization.dll
+C:\Users\Michael\Documents\C# Project\ResumeMatcher\bin\Debug\net9.0\UglyToad.PdfPig.Tokens.dll

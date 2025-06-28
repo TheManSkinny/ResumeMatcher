@@ -30,12 +30,23 @@ namespace ResumeMatcher.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ParsedText")
-                        .IsRequired()
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RawText")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UploadedAt")
@@ -62,34 +73,12 @@ namespace ResumeMatcher.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("PostedDate")
+                    b.Property<DateTime>("PostedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.ToTable("JobPosts");
-                });
-
-            modelBuilder.Entity("ResumeMatcher.Models.MatchResult", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CVId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JobPostId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("MatchScore")
-                        .HasColumnType("real");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MatchResults");
                 });
 #pragma warning restore 612, 618
         }
