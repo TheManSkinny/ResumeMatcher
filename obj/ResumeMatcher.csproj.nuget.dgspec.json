@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Michael\\Documents\\C# Project\\ResumeMatcher\\ResumeMatcher.csproj": {}
+    "C:\\Users\\Michael\\Documents\\ResumeMatcher\\ResumeMatcher.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Michael\\Documents\\C# Project\\ResumeMatcher\\ResumeMatcher.csproj": {
+    "C:\\Users\\Michael\\Documents\\ResumeMatcher\\ResumeMatcher.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Michael\\Documents\\C# Project\\ResumeMatcher\\ResumeMatcher.csproj",
+        "projectUniqueName": "C:\\Users\\Michael\\Documents\\ResumeMatcher\\ResumeMatcher.csproj",
         "projectName": "ResumeMatcher",
-        "projectPath": "C:\\Users\\Michael\\Documents\\C# Project\\ResumeMatcher\\ResumeMatcher.csproj",
+        "projectPath": "C:\\Users\\Michael\\Documents\\ResumeMatcher\\ResumeMatcher.csproj",
         "packagesPath": "C:\\Users\\Michael\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Michael\\Documents\\C# Project\\ResumeMatcher\\obj\\",
+        "outputPath": "C:\\Users\\Michael\\Documents\\ResumeMatcher\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Michael\\AppData\\Roaming\\NuGet\\NuGet.Config"
