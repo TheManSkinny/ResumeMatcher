@@ -32,12 +32,20 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRkSm9iLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Michael/Documents/ResumeMatcher/Pages/Applications.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXBwbGljYXRpb25zLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Michael/Documents/ResumeMatcher/Pages/EditJob.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRWRpdEpvYi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Michael/Documents/ResumeMatcher/Pages/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Michael/Documents/ResumeMatcher/Pages/HRDashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSFJEYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Michael/Documents/ResumeMatcher/Pages/Index.cshtml]

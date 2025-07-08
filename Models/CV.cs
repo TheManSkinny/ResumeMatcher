@@ -26,6 +26,20 @@ namespace ResumeMatcher.Models
         public string? RawText { get; set; }
 
         public DateTime UploadedAt { get; set; } = DateTime.Now;
+
+        // Enhanced fields
+        public string? ExtractedSkills { get; set; } // JSON array of skills
+        public int YearsOfExperience { get; set; }
+        public string? Education { get; set; } // JSON array of education
+        public string? Summary { get; set; }
+        public double QualityScore { get; set; } // Overall resume quality (0-100)
+
+        // User relationship
+        public int? UserId { get; set; }
+        public User? User { get; set; }
+
+        // Navigation properties
+        public List<JobApplication> Applications { get; set; } = new();
     }
 }
 // This file defines the CV model used in the ResumeMatcher application.

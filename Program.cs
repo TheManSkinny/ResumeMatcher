@@ -20,6 +20,12 @@ builder.Services.AddScoped<ResumeMatchingService>();
 // 📄 Add document processing service
 builder.Services.AddScoped<DocumentProcessingService>();
 
+// 📊 Add analytics service
+builder.Services.AddScoped<AnalyticsService>();
+
+// 📋 Add application management service
+builder.Services.AddScoped<ApplicationService>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

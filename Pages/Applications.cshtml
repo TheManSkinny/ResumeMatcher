@@ -1,0 +1,428 @@
+@page
+@using ResumeMatcher.Models
+@model ResumeMatcher.Pages.ApplicationsModel
+@{
+    ViewData["Title"] = "Application Management";
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-users me-2"></i>Application Management</h2>
+        <div>
+            <button class="btn btn-outline-secondary me-2" data-bs-toggle="modal" data-bs-target="#filtersModal">
+                <i class="fas fa-filter me-1"></i>Filters
+            </button>
+            <button class="btn btn-outline-primary" onclick="exportApplications()">
+                <i class="fas fa-download me-1"></i>Export
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Job</label>
+                    <select name="JobId" class="form-select">
+                        <option value="">All Jobs</option>
+                        @foreach (var job in Model.Jobs)
+                        {
+                            <option value="@job.Id" selected="@(job.Id.ToString() == Model.SelectedJobId)">
+                                @job.JobTitle
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select name="Status" class="form-select">
+                        <option value="">All Statuses</option>
+                        @foreach (ApplicationStatus status in Enum.GetValues<ApplicationStatus>())
+                        {
+                            <option value="@status" selected="@(status.ToString() == Model.SelectedStatus)">
+                                @status.ToString()
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Match Score</label>
+                    <select name="MatchRange" class="form-select">
+                        <option value="">Any Match</option>
+                        <option value="excellent" selected="@(Model.SelectedMatchRange == "excellent")">Excellent (70%+)</option>
+                        <option value="good" selected="@(Model.SelectedMatchRange == "good")">Good (40-69%)</option>
+                        <option value="fair" selected="@(Model.SelectedMatchRange == "fair")">Fair (0-39%)</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-1"></i>Apply Filters
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Applications Table -->
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Applications (@Model.Applications.Count)
+            </h6>
+        </div>
+        <div class="card-body">
+            @if (Model.Applications.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" />
+                                </th>
+                                <th>Candidate</th>
+                                <th>Job</th>
+                                <th>Match Score</th>
+                                <th>Status</th>
+                                <th>Applied Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var app in Model.Applications)
+                            {
+                                <tr data-application-id="@app.Id">
+                                    <td>
+                                        <input type="checkbox" class="application-checkbox" value="@app.Id" />
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-sm rounded-circle bg-primary text-white me-3">
+                                                @app.CV.FullName?.Substring(0, 1).ToUpper()
+                                            </div>
+                                            <div>
+                                                <div class="font-weight-bold">@app.CV.FullName</div>
+                                                <small class="text-muted">@app.CV.Email</small>
+                                                @if (app.CV.PhoneNumber != null)
+                                                {
+                                                    <br><small class="text-muted">@app.CV.PhoneNumber</small>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <div class="font-weight-bold">@app.JobPost.JobTitle</div>
+                                            @if (app.JobPost.Location != null)
+                                            {
+                                                <small class="text-muted">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>@app.JobPost.Location
+                                                </small>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="progress me-2" style="width: 60px; height: 20px;">
+                                                <div class="progress-bar @GetMatchScoreColor(app.MatchScore)" 
+                                                     style="width: @(app.MatchScore)%" 
+                                                     role="progressbar">
+                                                </div>
+                                            </div>
+                                            <span class="badge @GetMatchScoreBadge(app.MatchScore)">
+                                                @app.MatchScore.ToString("F1")%
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge @GetStatusBadgeClass(app.Status)" id="status-@app.Id">
+                                            @app.Status.ToString()
+                                        </span>
+                                        @if (app.IsShortlisted)
+                                        {
+                                            <br><span class="badge bg-warning mt-1">⭐ Shortlisted</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div>@app.AppliedAt.ToString("MMM dd, yyyy")</div>
+                                        <small class="text-muted">@app.AppliedAt.ToString("h:mm tt")</small>
+                                        @if (app.ReviewedAt.HasValue)
+                                        {
+                                            <br><small class="text-success">Reviewed @app.ReviewedAt.Value.ToString("MMM dd")</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" 
+                                                    data-bs-toggle="dropdown">
+                                                Actions
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" href="@app.CV.FilePath" target="_blank">
+                                                        <i class="fas fa-file-pdf me-2"></i>View Resume
+                                                    </a>
+                                                </li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#" onclick="toggleShortlist(@app.Id, @app.IsShortlisted.ToString().ToLower())">
+                                                        <i class="fas fa-star me-2"></i>
+                                                        @(app.IsShortlisted ? "Remove from Shortlist" : "Add to Shortlist")
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#" onclick="scheduleInterview(@app.Id)">
+                                                        <i class="fas fa-calendar me-2"></i>Schedule Interview
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#" onclick="updateStatus(@app.Id)">
+                                                        <i class="fas fa-edit me-2"></i>Update Status
+                                                    </a>
+                                                </li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger" href="#" onclick="rejectApplication(@app.Id)">
+                                                        <i class="fas fa-times me-2"></i>Reject
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Bulk Actions -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div id="bulkActions" class="d-none">
+                        <span class="text-muted me-3">
+                            <span id="selectedCount">0</span> selected
+                        </span>
+                        <button class="btn btn-sm btn-outline-warning me-2" onclick="bulkShortlist()">
+                            <i class="fas fa-star me-1"></i>Shortlist Selected
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="bulkReject()">
+                            <i class="fas fa-times me-1"></i>Reject Selected
+                        </button>
+                    </div>
+                    <div></div>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <h5>No applications found</h5>
+                    <p class="text-muted">Try adjusting your filters or check back later.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Status Update Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Application Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="statusForm">
+                    <input type="hidden" id="applicationId" />
+                    <div class="mb-3">
+                        <label for="newStatus" class="form-label">New Status</label>
+                        <select id="newStatus" class="form-select">
+                            @foreach (ApplicationStatus status in Enum.GetValues<ApplicationStatus>())
+                            {
+                                <option value="@status">@status.ToString()</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes (Optional)</label>
+                        <textarea id="notes" class="form-control" rows="3" placeholder="Add any notes about this status change..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveStatusUpdate()">Update Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetStatusBadgeClass(ApplicationStatus status)
+    {
+        return status switch
+        {
+            ApplicationStatus.Applied => "bg-primary",
+            ApplicationStatus.Reviewing => "bg-warning",
+            ApplicationStatus.Shortlisted => "bg-info",
+            ApplicationStatus.InterviewScheduled => "bg-success",
+            ApplicationStatus.Interviewed => "bg-success",
+            ApplicationStatus.Offered => "bg-success",
+            ApplicationStatus.Hired => "bg-success",
+            ApplicationStatus.Rejected => "bg-danger",
+            ApplicationStatus.Withdrawn => "bg-secondary",
+            _ => "bg-light"
+        };
+    }
+
+    string GetMatchScoreColor(float score)
+    {
+        return score >= 70 ? "bg-success" : score >= 40 ? "bg-warning" : "bg-info";
+    }
+
+    string GetMatchScoreBadge(float score)
+    {
+        return score >= 70 ? "bg-success" : score >= 40 ? "bg-warning" : "bg-info";
+    }
+}
+
+<script>
+function toggleSelectAll() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.application-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+    });
+    
+    updateBulkActions();
+}
+
+function updateBulkActions() {
+    const checkboxes = document.querySelectorAll('.application-checkbox:checked');
+    const bulkActions = document.getElementById('bulkActions');
+    const selectedCount = document.getElementById('selectedCount');
+    
+    if (checkboxes.length > 0) {
+        bulkActions.classList.remove('d-none');
+        selectedCount.textContent = checkboxes.length;
+    } else {
+        bulkActions.classList.add('d-none');
+    }
+}
+
+// Add event listeners to checkboxes
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.application-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', updateBulkActions);
+    });
+});
+
+function updateStatus(applicationId) {
+    document.getElementById('applicationId').value = applicationId;
+    const modal = new bootstrap.Modal(document.getElementById('statusModal'));
+    modal.show();
+}
+
+function saveStatusUpdate() {
+    const applicationId = document.getElementById('applicationId').value;
+    const newStatus = document.getElementById('newStatus').value;
+    const notes = document.getElementById('notes').value;
+    
+    // Make API call to update status
+    fetch('/api/applications/' + applicationId + '/status', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            status: newStatus,
+            notes: notes
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the status badge in the table
+            const statusElement = document.getElementById('status-' + applicationId);
+            statusElement.textContent = newStatus;
+            statusElement.className = 'badge ' + data.badgeClass;
+            
+            // Close modal
+            bootstrap.Modal.getInstance(document.getElementById('statusModal')).hide();
+            
+            // Show success message
+            showAlert('Status updated successfully!', 'success');
+        } else {
+            showAlert('Error updating status: ' + data.message, 'danger');
+        }
+    })
+    .catch(error => {
+        showAlert('Error updating status: ' + error.message, 'danger');
+    });
+}
+
+function toggleShortlist(applicationId, isCurrentlyShortlisted) {
+    const action = isCurrentlyShortlisted ? 'remove' : 'add';
+    
+    fetch(`/api/applications/${applicationId}/shortlist`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            shortlist: !isCurrentlyShortlisted
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload(); // Refresh page to show updated shortlist status
+        } else {
+            showAlert('Error updating shortlist: ' + data.message, 'danger');
+        }
+    })
+    .catch(error => {
+        showAlert('Error updating shortlist: ' + error.message, 'danger');
+    });
+}
+
+function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.top = '20px';
+    alertDiv.style.right = '20px';
+    alertDiv.style.zIndex = '9999';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.parentNode.removeChild(alertDiv);
+        }
+    }, 5000);
+}
+
+function exportApplications() {
+    const params = new URLSearchParams(window.location.search);
+    params.set('export', 'true');
+    window.location.href = window.location.pathname + '?' + params.toString();
+}
+</script>
+
+<style>
+.avatar {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+</style>
