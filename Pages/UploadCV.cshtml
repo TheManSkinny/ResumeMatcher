@@ -4,29 +4,44 @@
     ViewData["Title"] = "Upload CV";
 }
 
-<h2>Upload Resume</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Upload Your Resume</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label">Full Name</label>
+                            <input asp-for="FullName" class="form-control" />
+                        </div>
 
-<form method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="FullName">Full Name</label>
-        <input asp-for="FullName" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Email">Email</label>
-        <input asp-for="Email" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="PhoneNumber">Phone Number</label>
-        <input asp-for="PhoneNumber" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label for="CVFile">Upload CV</label>
-        <input type="file" name="CVFile" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-primary mt-2">Upload</button>
-</form>
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control" />
+                        </div>
 
-@if (Model.Message != null)
-{
-    <div class="alert alert-info mt-3">@Model.Message</div>
-}
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="CVFile" class="form-label">Upload CV</label>
+                            <input type="file" name="CVFile" class="form-control" />
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">Upload</button>
+                    </form>
+
+                    @if (Model.Message != null)
+                    {
+                        <div class="alert alert-info mt-3">@Model.Message</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

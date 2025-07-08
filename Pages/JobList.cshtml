@@ -1,0 +1,27 @@
+@page
+@model ResumeMatcher.Pages.JobListModel
+@{
+    ViewData["Title"] = "Available Job Listings";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Available Job Listings</h2>
+
+    @if (Model.JobPosts.Any())
+    {
+        <div class="list-group">
+            @foreach (var job in Model.JobPosts)
+            {
+                <div class="list-group-item mb-3">
+                    <h5>@job.JobTitle</h5>
+                    <p>@job.Description</p>
+                    <small class="text-muted">Posted on @job.PostedAt.ToString("f")</small>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No job listings available.</p>
+    }
+</div>

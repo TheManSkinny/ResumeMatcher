@@ -28,12 +28,20 @@ build_property._RazorSourceGeneratorDebug =
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
+[C:/Users/Michael/Documents/ResumeMatcher/Pages/AddJob.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRkSm9iLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Michael/Documents/ResumeMatcher/Pages/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Michael/Documents/ResumeMatcher/Pages/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Michael/Documents/ResumeMatcher/Pages/JobList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSm9iTGlzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Michael/Documents/ResumeMatcher/Pages/JobPost.cshtml]
