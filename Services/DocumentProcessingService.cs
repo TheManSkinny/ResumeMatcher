@@ -11,7 +11,7 @@ namespace ResumeMatcher.Services
         public async Task<string> ExtractTextFromFileAsync(string filePath)
         {
             var extension = Path.GetExtension(filePath).ToLowerInvariant();
-            
+
             try
             {
                 return extension switch
@@ -33,12 +33,12 @@ namespace ResumeMatcher.Services
         {
             using var pdf = PdfDocument.Open(filePath);
             var text = new StringBuilder();
-            
+
             foreach (var page in pdf.GetPages())
             {
                 text.AppendLine(page.Text);
             }
-            
+
             return text.ToString();
         }
 
@@ -48,15 +48,15 @@ namespace ResumeMatcher.Services
             {
                 using var doc = WordprocessingDocument.Open(filePath, false);
                 var body = doc.MainDocumentPart?.Document?.Body;
-                
+
                 if (body == null) return string.Empty;
-                
+
                 var text = new StringBuilder();
                 foreach (var paragraph in body.Elements<Paragraph>())
                 {
                     text.AppendLine(paragraph.InnerText);
                 }
-                
+
                 return text.ToString();
             });
         }
@@ -161,7 +161,7 @@ namespace ResumeMatcher.Services
 
             foreach (var line in lines)
             {
-                if (educationKeywords.Any(keyword => 
+                if (educationKeywords.Any(keyword =>
                     line.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
                 {
                     education.Add(line.Trim());
@@ -204,7 +204,7 @@ namespace ResumeMatcher.Services
         {
             var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             var wordCount = words.Length;
-            
+
             return $"Resume contains {wordCount} words and appears to be a " +
                    (wordCount > 500 ? "comprehensive" : wordCount > 200 ? "standard" : "brief") +
                    " resume document.";

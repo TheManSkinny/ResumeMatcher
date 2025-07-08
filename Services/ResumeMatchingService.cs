@@ -48,7 +48,7 @@ namespace ResumeMatcher.Services
 
             // Calculate skill match score (weighted higher)
             float skillMatchScore = CalculateSkillMatchScore(resumeSkills, jobSkills);
-            
+
             // Calculate keyword match score
             float keywordMatchScore = CalculateKeywordMatchScore(resumeKeywords, jobKeywords);
 

@@ -87,7 +87,7 @@ namespace ResumeMatcher.Services
             await _context.SaveChangesAsync();
 
             // Track status change
-            await _analyticsService.TrackMetricAsync("application_status", newStatus.ToString(), 1, 
+            await _analyticsService.TrackMetricAsync("application_status", newStatus.ToString(), 1,
                 application.JobPostId, application.UserId,
                 JsonSerializer.Serialize(new { OldStatus = oldStatus.ToString(), NewStatus = newStatus.ToString() }));
 
@@ -156,8 +156,8 @@ namespace ResumeMatcher.Services
             await _context.SaveChangesAsync();
 
             // Track shortlisting
-            await _analyticsService.TrackMetricAsync("application_action", 
-                isShortlisted ? "shortlisted" : "unshortlisted", 1, 
+            await _analyticsService.TrackMetricAsync("application_action",
+                isShortlisted ? "shortlisted" : "unshortlisted", 1,
                 application.JobPostId, application.UserId);
         }
 
@@ -176,7 +176,7 @@ namespace ResumeMatcher.Services
             await _context.SaveChangesAsync();
 
             // Track interview scheduling
-            await _analyticsService.TrackMetricAsync("interview", "scheduled", 1, 
+            await _analyticsService.TrackMetricAsync("interview", "scheduled", 1,
                 application.JobPostId, application.UserId);
         }
 

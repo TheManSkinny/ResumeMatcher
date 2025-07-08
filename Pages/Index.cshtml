@@ -4,37 +4,127 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to ResumeMatcher</h1>
-    <p class="lead">Match your resume with the perfect job opportunities</p>
+<!-- Hero Section -->
+<div class="page-header text-center">
+    <div class="container">
+        <h1 class="page-title">
+            <i class="fas fa-rocket me-3"></i>Welcome to ResumeMatcher
+        </h1>
+        <p class="page-subtitle">
+            Match your resume with the perfect job opportunities using AI-powered matching technology
+        </p>
+        <div class="mt-4">
+            <a asp-page="/UploadCV" class="btn btn-primary-modern me-3">
+                <i class="fas fa-upload me-2"></i>Get Started
+            </a>
+            <a asp-page="/JobList" class="btn btn-outline-modern">
+                <i class="fas fa-search me-2"></i>Browse Jobs
+            </a>
+        </div>
+    </div>
+</div>
 
-    <div class="row mt-5">
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Upload Your Resume</h5>
-                    <p class="card-text">Upload your CV and let our system analyze it for job matching.</p>
-                    <a asp-page="/UploadCV" class="btn btn-primary">Upload CV</a>
+<div class="container">
+    <!-- Features Section -->
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-star"></i>
+        </div>
+        <div>
+            <h2 class="section-title">Key Features</h2>
+            <p class="section-subtitle">Discover what makes ResumeMatcher the perfect solution for job matching</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-lg-4 mb-4">
+            <div class="modern-card h-100">
+                <div class="card-header-modern text-center">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-file-upload text-primary" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h3 class="card-title-modern">Upload Your Resume</h3>
+                    <p class="card-subtitle-modern">Upload your CV and let our AI system analyze it for intelligent job
+                        matching.</p>
+                </div>
+                <div class="card-body text-center">
+                    <a asp-page="/UploadCV" class="btn btn-primary-modern">
+                        <i class="fas fa-upload me-2"></i>Upload CV
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Browse Job Listings</h5>
-                    <p class="card-text">Explore available job opportunities and find your perfect match.</p>
-                    <a asp-page="/JobList" class="btn btn-success">View Jobs</a>
+        <div class="col-lg-4 mb-4">
+            <div class="modern-card h-100">
+                <div class="card-header-modern text-center">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-search text-success" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h3 class="card-title-modern">Browse Job Listings</h3>
+                    <p class="card-subtitle-modern">Explore available job opportunities with advanced filtering and
+                        smart recommendations.</p>
+                </div>
+                <div class="card-body text-center">
+                    <a asp-page="/JobList" class="btn btn-success-modern">
+                        <i class="fas fa-briefcase me-2"></i>View Jobs
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Post a Job</h5>
-                    <p class="card-text">Employers can post new job opportunities for candidates to discover.</p>
-                    <a asp-page="/AddJob" class="btn btn-info">Post Job</a>
+        <div class="col-lg-4 mb-4">
+            <div class="modern-card h-100">
+                <div class="card-header-modern text-center">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-plus-circle text-info" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h3 class="card-title-modern">Post a Job</h3>
+                    <p class="card-subtitle-modern">Employers can post new job opportunities and find the perfect
+                        candidates.</p>
+                </div>
+                <div class="card-body text-center">
+                    <a asp-page="/AddJob" class="btn btn-outline-modern">
+                        <i class="fas fa-plus me-2"></i>Post Job
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="modern-card mb-5">
+        <div class="card-header-modern text-center">
+            <h2 class="card-title-modern">Why Choose ResumeMatcher?</h2>
+            <p class="card-subtitle-modern">Join thousands of job seekers and employers who trust our platform</p>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-3 mb-4">
+                    <div class="stat-item">
+                        <h3 class="text-gradient display-5 fw-bold">1000+</h3>
+                        <p class="text-muted">Job Postings</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-item">
+                        <h3 class="text-gradient display-5 fw-bold">500+</h3>
+                        <p class="text-muted">Companies</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-item">
+                        <h3 class="text-gradient display-5 fw-bold">5000+</h3>
+                        <p class="text-muted">Job Seekers</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-item">
+                        <h3 class="text-gradient display-5 fw-bold">95%</h3>
+                        <p class="text-muted">Match Accuracy</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+               p</div>

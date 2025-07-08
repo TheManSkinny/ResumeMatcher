@@ -5,39 +5,76 @@
     ViewData["Title"] = "Application Management";
 }
 
-<div class="container-fluid mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-users me-2"></i>Application Management</h2>
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="page-title">
+                    <i class="fas fa-users me-3"></i>Application Management
+                </h1>
+                <p class="page-subtitle">
+                    Review, filter, and manage job applications efficiently with advanced tools and analytics
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="d-flex gap-2 justify-content-lg-end">
+                    <button class="btn btn-outline-modern" data-bs-toggle="modal" data-bs-target="#filtersModal">
+                        <i class="fas fa-filter me-2"></i>Advanced Filters
+                    </button>
+                    <button class="btn btn-success-modern" onclick="exportApplications()">
+                        <i class="fas fa-download me-2"></i>Export Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <!-- Search and Filters Section -->
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-filter"></i>
+        </div>
         <div>
-            <button class="btn btn-outline-secondary me-2" data-bs-toggle="modal" data-bs-target="#filtersModal">
-                <i class="fas fa-filter me-1"></i>Filters
-            </button>
-            <button class="btn btn-outline-primary" onclick="exportApplications()">
-                <i class="fas fa-download me-1"></i>Export
-            </button>
+            <h2 class="section-title">Filter Applications</h2>
+            <p class="section-subtitle">Use filters to find specific applications and candidates</p>
         </div>
     </div>
 
-    <!-- Filters Bar -->
-    <div class="card mb-4">
+    <div class="modern-card mb-4">
+        <div class="card-header-modern">
+            <h3 class="card-title-modern">
+                <i class="fas fa-search me-2"></i>Search & Filter
+            </h3>
+            <p class="card-subtitle-modern">Quickly find applications by job, status, or candidate information</p>
+        </div>
         <div class="card-body">
             <form method="get" class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label">Job</label>
-                    <select name="JobId" class="form-select">
-                        <option value="">All Jobs</option>
-                        @foreach (var job in Model.Jobs)
-                        {
-                            <option value="@job.Id" selected="@(job.Id.ToString() == Model.SelectedJobId)">
-                                @job.JobTitle
-                            </option>
-                        }
-                    </select>
+                <div class="col-lg-3">
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">
+                            <i class="fas fa-briefcase me-2"></i>Job Position
+                        </label>
+                        <select name="JobId" class="form-control-modern">
+                            <option value="">All Jobs</option>
+                            @foreach (var job in Model.Jobs)
+                            {
+                                <option value="@job.Id" selected="@(job.Id.ToString() == Model.SelectedJobId)">
+                                    @job.JobTitle
+                                </option>
+                            }
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Status</label>
-                    <select name="Status" class="form-select">
-                        <option value="">All Statuses</option>
+                <div class="col-lg-3">
+                    <div class="form-group-modern">
+                        <label class="form-label-modern">
+                            <i class="fas fa-tasks me-2"></i>Application Status
+                        </label>
+                        <select name="Status" class="form-control-modern">
+                            <option value="">All Statuses</option>
                         @foreach (ApplicationStatus status in Enum.GetValues<ApplicationStatus>())
                         {
                             <option value="@status" selected="@(status.ToString() == Model.SelectedStatus)">

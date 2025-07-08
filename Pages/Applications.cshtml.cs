@@ -19,7 +19,7 @@ namespace ResumeMatcher.Pages
 
         public List<JobApplication> Applications { get; set; } = new();
         public List<JobPost> Jobs { get; set; } = new();
-        
+
         public string? SelectedJobId { get; set; }
         public string? SelectedStatus { get; set; }
         public string? SelectedMatchRange { get; set; }

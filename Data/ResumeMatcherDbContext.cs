@@ -11,7 +11,7 @@ namespace ResumeMatcher.Data
         {
         }
 
-        public DbSet<CV> CVs { get; set; } 
+        public DbSet<CV> CVs { get; set; }
         public DbSet<JobPost> JobPosts { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }

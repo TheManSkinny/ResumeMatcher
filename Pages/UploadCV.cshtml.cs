@@ -19,8 +19,8 @@ namespace ResumeMatcher.Pages
         private readonly DocumentProcessingService _documentService;
 
         public UploadCVModel(
-            ResumeMatcherDbContext context, 
-            IWebHostEnvironment environment, 
+            ResumeMatcherDbContext context,
+            IWebHostEnvironment environment,
             ResumeMatchingService matchingService,
             DocumentProcessingService documentService)
         {
@@ -59,7 +59,7 @@ namespace ResumeMatcher.Pages
             // File validation
             var allowedExtensions = new[] { ".pdf", ".doc", ".docx" };
             var fileExtension = Path.GetExtension(CVFile.FileName).ToLowerInvariant();
-            
+
             if (!allowedExtensions.Contains(fileExtension))
             {
                 Message = "Please upload a PDF, DOC, or DOCX file.";

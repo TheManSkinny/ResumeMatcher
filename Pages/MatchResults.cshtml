@@ -1,4 +1,47 @@
 ﻿@page
 @model MyApp.Namespace.MatchResultsModel
 @{
+    ViewData["Title"] = "Match Results";
 }
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container">
+        <div class="text-center">
+            <h1 class="page-title">
+                <i class="fas fa-bullseye me-3"></i>Your Job Matches
+            </h1>
+            <p class="page-subtitle">
+                We found these opportunities that perfectly align with your skills and experience
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Results Section -->
+    <div class="section-header">
+        <div class="section-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div>
+            <h2 class="section-title">Match Results</h2>
+            <p class="section-subtitle">Jobs ranked by compatibility with your resume</p>
+        </div>
+    </div>
+
+    <!-- Match Results will be populated by the model -->
+    <div class="modern-card">
+        <div class="card-header-modern text-center">
+            <h3 class="card-title-modern">Coming Soon</h3>
+            <p class="card-subtitle-modern">Advanced job matching results will be displayed here</p>
+        </div>
+        <div class="card-body text-center py-5">
+            <i class="fas fa-rocket text-muted mb-4" style="font-size: 4rem;"></i>
+            <p class="text-muted">Upload your resume to see personalized job matches!</p>
+            <a asp-page="/UploadCV" class="btn btn-primary-modern">
+                <i class="fas fa-upload me-2"></i>Upload Resume
+            </a>
+        </div>
+    </div>
+</div>
