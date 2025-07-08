@@ -1,0 +1,162 @@
+﻿@page "{id:int}"
+@model ResumeMatcher.Pages.EditJobModel
+@{
+    ViewData["Title"] = "Edit Job";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>Edit Job Posting
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label asp-for="JobPost.JobTitle" class="form-label">Job Title</label>
+                            <input asp-for="JobPost.JobTitle" class="form-control" placeholder="e.g., Senior Software Developer" />
+                            <span asp-validation-for="JobPost.JobTitle" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="JobPost.Description" class="form-label">Job Description</label>
+                            <textarea asp-for="JobPost.Description" class="form-control" rows="8" 
+                                placeholder="Describe the role, responsibilities, required skills, and qualifications..."></textarea>
+                            <span asp-validation-for="JobPost.Description" class="text-danger"></span>
+                            <div class="form-text">Include specific skills and technologies for better candidate matching.</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="JobPost.Location" class="form-label">Location</label>
+                                    <input asp-for="JobPost.Location" class="form-control" placeholder="e.g., New York, NY or Remote" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="JobPost.SalaryRange" class="form-label">Salary Range</label>
+                                    <input asp-for="JobPost.SalaryRange" class="form-control" placeholder="e.g., $80,000 - $120,000" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="JobPost.ExperienceLevel" class="form-label">Experience Level</label>
+                                    <select asp-for="JobPost.ExperienceLevel" class="form-select">
+                                        <option value="">Select Experience Level</option>
+                                        <option value="Entry Level">Entry Level (0-2 years)</option>
+                                        <option value="Mid Level">Mid Level (3-5 years)</option>
+                                        <option value="Senior Level">Senior Level (6-10 years)</option>
+                                        <option value="Lead/Principal">Lead/Principal (10+ years)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="JobPost.JobType" class="form-label">Job Type</label>
+                                    <select asp-for="JobPost.JobType" class="form-select">
+                                        <option value="">Select Job Type</option>
+                                        <option value="Full-time">Full-time</option>
+                                        <option value="Part-time">Part-time</option>
+                                        <option value="Contract">Contract</option>
+                                        <option value="Freelance">Freelance</option>
+                                        <option value="Internship">Internship</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Required Skills</label>
+                            <input type="text" id="skillsInput" class="form-control" 
+                                placeholder="Type skills and press Enter (e.g., JavaScript, React, Node.js)" />
+                            <div id="skillsTags" class="mt-2"></div>
+                            <input type="hidden" asp-for="JobPost.RequiredSkills" id="hiddenSkills" />
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-page="/JobList" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i>Back to Jobs
+                            </a>
+                            <div>
+                                <button type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    <i class="fas fa-trash me-1"></i>Delete Job
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>Update Job
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this job posting? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" asp-page-handler="Delete" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete Job</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const skillsInput = document.getElementById('skillsInput');
+    const skillsTags = document.getElementById('skillsTags');
+    const hiddenSkills = document.getElementById('hiddenSkills');
+    let skills = hiddenSkills.value ? hiddenSkills.value.split(',') : [];
+
+    function renderSkills() {
+        skillsTags.innerHTML = '';
+        skills.forEach((skill, index) => {
+            const tag = document.createElement('span');
+            tag.className = 'badge bg-primary me-1 mb-1';
+            tag.innerHTML = `${skill} <button type="button" class="btn-close btn-close-white btn-sm ms-1" onclick="removeSkill(${index})"></button>`;
+            skillsTags.appendChild(tag);
+        });
+        hiddenSkills.value = skills.join(',');
+    }
+
+    window.removeSkill = function(index) {
+        skills.splice(index, 1);
+        renderSkills();
+    };
+
+    skillsInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && this.value.trim()) {
+            e.preventDefault();
+            const skill = this.value.trim();
+            if (!skills.includes(skill)) {
+                skills.push(skill);
+                renderSkills();
+            }
+            this.value = '';
+        }
+    });
+
+    // Initial render
+    renderSkills();
+});
+</script>

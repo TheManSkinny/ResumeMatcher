@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ResumeMatcher.Data; // Replace with your namespace
+using ResumeMatcher.Data;
+using ResumeMatcher.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,12 @@ builder.Services.AddRazorPages();
 // 🔗 Add database connection
 builder.Services.AddDbContext<ResumeMatcherDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// 🤖 Add ML.NET resume matching service
+builder.Services.AddScoped<ResumeMatchingService>();
+
+// 📄 Add document processing service
+builder.Services.AddScoped<DocumentProcessingService>();
 
 var app = builder.Build();
 

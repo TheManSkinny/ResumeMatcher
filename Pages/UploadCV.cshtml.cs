@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ResumeMatcher.Data;
 using ResumeMatcher.Models;
+using ResumeMatcher.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading.Tasks;
-using UglyToad.PdfPig;
-using UglyToad.PdfPig.Content;
 
 namespace ResumeMatcher.Pages
 {
@@ -16,11 +15,19 @@ namespace ResumeMatcher.Pages
     {
         private readonly ResumeMatcherDbContext _context;
         private readonly IWebHostEnvironment _environment;
+        private readonly ResumeMatchingService _matchingService;
+        private readonly DocumentProcessingService _documentService;
 
-        public UploadCVModel(ResumeMatcherDbContext context, IWebHostEnvironment environment)
+        public UploadCVModel(
+            ResumeMatcherDbContext context, 
+            IWebHostEnvironment environment, 
+            ResumeMatchingService matchingService,
+            DocumentProcessingService documentService)
         {
             _context = context;
             _environment = environment;
+            _matchingService = matchingService;
+            _documentService = documentService;
         }
 
         [BindProperty]
@@ -36,12 +43,50 @@ namespace ResumeMatcher.Pages
         public IFormFile? CVFile { get; set; }
 
         public string? Message { get; set; }
+        public bool IsError { get; set; }
+        public List<(string JobTitle, float MatchScore)> JobMatches { get; set; } = new();
+        public ResumeAnalysis? ResumeAnalysis { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid || CVFile == null)
             {
                 Message = "Please fill all fields and upload a CV.";
+                IsError = true;
+                return Page();
+            }
+
+            // File validation
+            var allowedExtensions = new[] { ".pdf", ".doc", ".docx" };
+            var fileExtension = Path.GetExtension(CVFile.FileName).ToLowerInvariant();
+            
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                Message = "Please upload a PDF, DOC, or DOCX file.";
+                IsError = true;
+                return Page();
+            }
+
+            if (CVFile.Length > 5 * 1024 * 1024) // 5MB limit
+            {
+                Message = "File size must be less than 5MB.";
+                IsError = true;
+                return Page();
+            }
+
+            // Check for valid email format
+            if (!IsValidEmail(Email))
+            {
+                Message = "Please enter a valid email address.";
+                IsError = true;
+                return Page();
+            }
+
+            // Check for valid email format
+            if (!IsValidEmail(Email))
+            {
+                Message = "Please enter a valid email address.";
+                IsError = true;
                 return Page();
             }
 
@@ -50,6 +95,7 @@ namespace ResumeMatcher.Pages
             if (exists)
             {
                 Message = "This resume has already been uploaded.";
+                IsError = true;
                 return Page();
             }
 
@@ -63,18 +109,18 @@ namespace ResumeMatcher.Pages
                 await CVFile.CopyToAsync(stream);
             }
 
-            // Extract text from PDF
-            string extractedText = "[text extraction failed]";
+            // Extract text from uploaded file
+            string extractedText;
             try
             {
-                using (var pdf = PdfDocument.Open(filePath))
-                {
-                    extractedText = string.Join("\n", pdf.GetPages().Select(p => p.Text));
-                }
+                extractedText = await _documentService.ExtractTextFromFileAsync(filePath);
+                ResumeAnalysis = _documentService.AnalyzeResume(extractedText);
             }
             catch (Exception ex)
             {
-                extractedText = $"[text extraction failed: {ex.Message}]";
+                Message = $"Error processing resume: {ex.Message}";
+                IsError = true;
+                return Page();
             }
 
             // Create CV object
@@ -89,39 +135,48 @@ namespace ResumeMatcher.Pages
                 RawText = extractedText
             };
 
-            // Find best job match
+            // Find best job matches using ML.NET service
             var jobPosts = await _context.JobPosts.ToListAsync();
-            string bestMatch = "No jobs available";
-            int maxScore = 0;
+            var jobsForMatching = jobPosts
+                .Where(j => j.JobTitle != null && j.Description != null)
+                .Select(j => (j.JobTitle!, j.Description!))
+                .ToList();
 
-            foreach (var job in jobPosts)
+            if (jobsForMatching.Any())
             {
-                var score = GetMatchScore(extractedText, job.Description);
-                if (score > maxScore)
-                {
-                    maxScore = score;
-                    bestMatch = job.JobTitle;
-                }
+                JobMatches = _matchingService.FindBestMatches(extractedText, jobsForMatching, 5);
+                var bestMatch = JobMatches.FirstOrDefault();
+
+                Message = bestMatch.MatchScore > 0
+                    ? $"Resume uploaded successfully! Best match: {bestMatch.JobTitle} ({bestMatch.MatchScore:F1}% match)"
+                    : "Resume uploaded successfully! No strong job matches found.";
+            }
+            else
+            {
+                Message = "Resume uploaded successfully! No jobs available for matching.";
             }
 
-            // Save CV to database (only once)
+            // Save CV to database
             _context.CVs.Add(cv);
             await _context.SaveChangesAsync();
-
-            // Set success message with match result (only once)
-            Message = maxScore > 0 
-                ? $"Resume uploaded successfully! Best match: {bestMatch} ({maxScore} keyword matches)"
-                : "Resume uploaded successfully! No job matches found.";
 
             return Page();
         }
 
-        private int GetMatchScore(string resumeText, string jobDescription)
+        private bool IsValidEmail(string? email)
         {
-            var resumeWords = resumeText.ToLower().Split(' ', '\n', '.', ',', ';');
-            var jobWords = jobDescription.ToLower().Split(' ', '\n', '.', ',', ';');
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
 
-            return resumeWords.Intersect(jobWords).Count();
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

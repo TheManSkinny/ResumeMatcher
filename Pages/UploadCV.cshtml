@@ -30,18 +30,139 @@
 
                         <div class="mb-3">
                             <label for="CVFile" class="form-label">Upload CV</label>
-                            <input type="file" name="CVFile" class="form-control" />
+                            <input type="file" name="CVFile" class="form-control" accept=".pdf,.doc,.docx" required />
+                            <div class="form-text">Supported formats: PDF, DOC, DOCX (Max size: 5MB)</div>
                         </div>
 
-                        <button type="submit" class="btn btn-success w-100">Upload</button>
+                        <button type="submit" class="btn btn-success w-100" id="uploadBtn">
+                            <span id="uploadText">Upload Resume</span>
+                            <span id="uploadSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                        </button>
                     </form>
 
                     @if (Model.Message != null)
                     {
-                        <div class="alert alert-info mt-3">@Model.Message</div>
+                        <div class="alert @(Model.IsError ? "alert-danger" : "alert-success") mt-3">
+                            @if (Model.IsError)
+                            {
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-check-circle me-2"></i>
+                            }
+                            @Model.Message
+                        </div>
+                    }
+
+                    @if (Model.JobMatches.Any())
+                    {
+                        <div class="mt-4">
+                            <h5><i class="fas fa-chart-line me-2"></i>Top Job Matches for Your Resume</h5>
+                            <p class="text-muted mb-3">Based on keyword analysis and skill matching</p>
+                            <div class="row">
+                                @foreach (var match in Model.JobMatches)
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card h-100 @(match.MatchScore >= 70 ? "border-success" : match.MatchScore >= 40 ? "border-warning" : "border-info")">
+                                            <div class="card-body">
+                                                <h6 class="card-title d-flex justify-content-between align-items-center">
+                                                    @match.JobTitle
+                                                    <span class="badge @(match.MatchScore >= 70 ? "bg-success" : match.MatchScore >= 40 ? "bg-warning" : "bg-info")">
+                                                        @match.MatchScore.ToString("F1")%
+                                                    </span>
+                                                </h6>
+                                                
+                                                <div class="progress mb-3" style="height: 8px;">
+                                                    <div class="progress-bar @(match.MatchScore >= 70 ? "bg-success" : match.MatchScore >= 40 ? "bg-warning" : "bg-info")" 
+                                                         role="progressbar"
+                                                         style="width: @(match.MatchScore)%" 
+                                                         aria-valuenow="@match.MatchScore"
+                                                         aria-valuemin="0" 
+                                                         aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <small class="text-muted">
+                                                        @if (match.MatchScore >= 70)
+                                                        {
+                                                            <span class="text-success"><i class="fas fa-star"></i> Excellent Match</span>
+                                                        }
+                                                        else if (match.MatchScore >= 40)
+                                                        {
+                                                            <span class="text-warning"><i class="fas fa-thumbs-up"></i> Good Match</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-info"><i class="fas fa-info-circle"></i> Possible Match</span>
+                                                        }
+                                                    </small>
+                                                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" title="View job details">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="text-center mt-3">
+                                <a asp-page="/JobList" class="btn btn-primary me-2">
+                                    <i class="fas fa-search me-1"></i>Browse All Jobs
+                                </a>
+                                <button class="btn btn-outline-secondary" onclick="window.print()">
+                                    <i class="fas fa-print me-1"></i>Print Results
+                                </button>
+                            </div>
+                        </div>
                     }
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const fileInput = document.querySelector('input[name="CVFile"]');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadText = document.getElementById('uploadText');
+        const uploadSpinner = document.getElementById('uploadSpinner');
+
+        // File validation on change
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Please select a PDF, DOC, or DOCX file.');
+                    this.value = '';
+                    return;
+                }
+
+                if (file.size > maxSize) {
+                    alert('File size must be less than 5MB.');
+                    this.value = '';
+                    return;
+                }
+            }
+        });
+
+        // Form submission handling
+        form.addEventListener('submit', function() {
+            uploadBtn.disabled = true;
+            uploadText.textContent = 'Processing...';
+            uploadSpinner.classList.remove('d-none');
+        });
+
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
